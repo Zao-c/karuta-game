@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
+    "@supabase/supabase-js": "^2.97.0",
     "js-sha256": "^0.11.1",
     "next": "14.2.0",
     "peerjs": "^1.5.5",
