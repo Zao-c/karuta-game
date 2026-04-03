@@ -45,3 +45,9 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+node_modules
+.next
+test-results
+playwright-report
+.env.local
