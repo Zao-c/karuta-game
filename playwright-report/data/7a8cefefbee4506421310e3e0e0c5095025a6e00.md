@@ -1,0 +1,216 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - paragraph [ref=e6]: 🌸 二次元歌牌
+        - 'button "房间: YJP41B07" [ref=e7] [cursor=pointer]':
+          - generic [ref=e8]: "房间: YJP41B07"
+          - img [ref=e9]
+      - generic [ref=e11]:
+        - button "回到大厅" [ref=e12] [cursor=pointer]:
+          - img [ref=e14]
+          - text: 回到大厅
+        - button [ref=e16] [cursor=pointer]:
+          - img [ref=e17]
+        - button [ref=e19] [cursor=pointer]:
+          - img [ref=e20]
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: 房间状态：准备中
+        - generic [ref=e26]:
+          - generic [ref=e28]: 房间同步正常
+          - generic [ref=e30]: 聊天同步正常
+          - generic [ref=e32]: 游客身份临时模式
+        - paragraph [ref=e33]: 玩家 1 人，已准备 1 人，旁观 1 人
+        - paragraph [ref=e34]: 把房间号或邀请文案发给好友，对方打开同一个网站后即可加入。
+      - generic [ref=e35]:
+        - button "复制房间号" [ref=e36] [cursor=pointer]:
+          - img [ref=e38]
+          - text: 复制房间号
+        - button "复制邀请文案" [ref=e40] [cursor=pointer]:
+          - img [ref=e42]
+          - text: 复制邀请文案
+    - generic [ref=e44]:
+      - generic [ref=e45]:
+        - heading "准备区" [level=6] [ref=e46]
+        - generic [ref=e47]:
+          - button "自动随机模式" [ref=e48] [cursor=pointer]:
+            - img [ref=e49]
+            - text: 自动随机模式
+          - button "裁判模式" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - text: 裁判模式
+        - paragraph [ref=e54]: 玩家 (2/8)
+        - generic [ref=e55]:
+          - generic [ref=e57]:
+            - generic [ref=e58]: 玩
+            - generic [ref=e59]:
+              - paragraph [ref=e60]:
+                - text: 玩家1
+                - img [ref=e61]
+              - generic [ref=e63]:
+                - generic [ref=e64]:
+                  - img [ref=e65]
+                  - generic [ref=e67]: 已准备
+                - generic [ref=e69]: 房主
+          - generic [ref=e71]:
+            - generic [ref=e72]: 👁
+            - generic [ref=e73]:
+              - paragraph [ref=e74]: 玩家2
+              - generic [ref=e76]:
+                - img [ref=e77]
+                - generic [ref=e79]: 旁观
+        - button "🤖 添加测试机器人" [ref=e80] [cursor=pointer]: 🤖 添加测试机器人
+      - generic [ref=e81]:
+        - heading "💬 聊天室" [level=6] [ref=e82]
+        - paragraph [ref=e84]: 暂无消息，发送第一条消息吧！
+        - generic [ref=e85]:
+          - generic [ref=e87]:
+            - textbox "输入消息..." [ref=e88]
+            - group
+          - button "发送" [ref=e89] [cursor=pointer]: 发送
+      - generic [ref=e90]:
+        - heading "点歌机 - 2026年新番牌组" [level=6] [ref=e91]
+        - generic [ref=e92]:
+          - generic [ref=e95] [cursor=pointer]:
+            - paragraph [ref=e96]: 咒术回战 死灭回游篇
+            - paragraph [ref=e97]: 咒术回战
+          - generic [ref=e100] [cursor=pointer]:
+            - paragraph [ref=e101]: 葬送的芙莉莲 第二季
+            - paragraph [ref=e102]: 葬送的芙莉莲
+          - generic [ref=e105] [cursor=pointer]:
+            - paragraph [ref=e106]: 地狱乐 第二季
+            - paragraph [ref=e107]: 地狱乐
+          - generic [ref=e110] [cursor=pointer]:
+            - paragraph [ref=e111]: 【推しの子】第3期
+            - paragraph [ref=e112]: 【推しの子】
+          - generic [ref=e115] [cursor=pointer]:
+            - paragraph [ref=e116]: 炎炎ノ消防隊 参ノ章 第2クール
+            - paragraph [ref=e117]: 炎炎ノ消防隊
+          - generic [ref=e120] [cursor=pointer]:
+            - paragraph [ref=e121]: Fate/strange Fake
+            - paragraph [ref=e122]: Fate/strange Fake
+          - generic [ref=e125] [cursor=pointer]:
+            - paragraph [ref=e126]: 無職転生Ⅲ
+            - paragraph [ref=e127]: 無職転生
+          - generic [ref=e130] [cursor=pointer]:
+            - paragraph [ref=e131]: とんがり帽子のアトリエ
+            - paragraph [ref=e132]: とんがり帽子のアトリエ
+          - generic [ref=e135] [cursor=pointer]:
+            - paragraph [ref=e136]: Re:ゼロから始める異世界生活 4th season
+            - paragraph [ref=e137]: Re:ゼロから始める異世界生活
+          - generic [ref=e140] [cursor=pointer]:
+            - paragraph [ref=e141]: 転生したらスライムだった件 第4期
+            - paragraph [ref=e142]: 転生したらスライムだった件
+          - generic [ref=e145] [cursor=pointer]:
+            - paragraph [ref=e146]: ようこそ実力至上主義の教室へ 4th Season
+            - paragraph [ref=e147]: ようこそ実力至上主義の教室へ
+          - generic [ref=e150] [cursor=pointer]:
+            - paragraph [ref=e151]: BLEACH 千年血戦篇-禍進譚-
+            - paragraph [ref=e152]: BLEACH
+          - generic [ref=e155] [cursor=pointer]:
+            - paragraph [ref=e156]: 薬屋のひとりごと 第3期
+            - paragraph [ref=e157]: 薬屋のひとりごと
+          - generic [ref=e160] [cursor=pointer]:
+            - paragraph [ref=e161]: Dr.STONE SCIENCE FUTURE
+            - paragraph [ref=e162]: Dr.STONE
+          - generic [ref=e165] [cursor=pointer]:
+            - paragraph [ref=e166]: お隣の天使様にいつの間にか駄目人間にされていた件 第2期
+            - paragraph [ref=e167]: お隣の天使様
+          - generic [ref=e170] [cursor=pointer]:
+            - paragraph [ref=e171]: 魔都精兵のスレイブ2
+            - paragraph [ref=e172]: 魔都精兵のスレイブ
+          - generic [ref=e175] [cursor=pointer]:
+            - paragraph [ref=e176]: 杖と剣のウィストリア Season2
+            - paragraph [ref=e177]: 杖と剣のウィストリア
+          - generic [ref=e180] [cursor=pointer]:
+            - paragraph [ref=e181]: 勇者パーティーにかわいい子がいたので、告白してみた
+            - paragraph [ref=e182]: 勇者パーティーにかわいい子がいたので
+          - generic [ref=e185] [cursor=pointer]:
+            - paragraph [ref=e186]: TRIGUN STARGAZE
+            - paragraph [ref=e187]: TRIGUN
+          - generic [ref=e190] [cursor=pointer]:
+            - paragraph [ref=e191]: 真夜中ハートチューン
+            - paragraph [ref=e192]: 真夜中ハートチューン
+          - generic [ref=e195] [cursor=pointer]:
+            - paragraph [ref=e196]: アオのハコ Season2
+            - paragraph [ref=e197]: アオのハコ
+          - generic [ref=e200] [cursor=pointer]:
+            - paragraph [ref=e201]: ヘルモード
+            - paragraph [ref=e202]: ヘルモード
+          - generic [ref=e205] [cursor=pointer]:
+            - paragraph [ref=e206]: ダーウィン事変
+            - paragraph [ref=e207]: ダーウィン事変
+          - generic [ref=e210] [cursor=pointer]:
+            - paragraph [ref=e211]: 黄泉のツガイ
+            - paragraph [ref=e212]: 黄泉のツガイ
+          - generic [ref=e215] [cursor=pointer]:
+            - paragraph [ref=e216]: 違国日記
+            - paragraph [ref=e217]: 違国日記
+          - generic [ref=e220] [cursor=pointer]:
+            - paragraph [ref=e221]: うるわしの宵の月
+            - paragraph [ref=e222]: うるわしの宵の月
+          - generic [ref=e225] [cursor=pointer]:
+            - paragraph [ref=e226]: 勇者刑に処す 懲罰勇者9004隊刑務記録
+            - paragraph [ref=e227]: 勇者刑に処す
+          - generic [ref=e230] [cursor=pointer]:
+            - paragraph [ref=e231]: 正反対な君と僕
+            - paragraph [ref=e232]: 正反対な君と僕
+          - generic [ref=e235] [cursor=pointer]:
+            - paragraph [ref=e236]: 死亡遊戯で飯を食う。
+            - paragraph [ref=e237]: 死亡遊戯で飯を食う。
+      - generic [ref=e238]:
+        - heading "自定义歌牌上传" [level=6] [ref=e239]
+        - button "牌组库" [ref=e241] [cursor=pointer]:
+          - img [ref=e243]
+          - text: 牌组库
+        - paragraph [ref=e246]: 💡 提示：添加自定义歌牌后将自动使用自定义牌组，无法与系统牌组混合使用
+        - generic [ref=e247]:
+          - generic [ref=e248]:
+            - generic [ref=e249]:
+              - generic: 角色/歌曲名称
+              - generic [ref=e250]:
+                - textbox "角色/歌曲名称" [ref=e251]
+                - group:
+                  - generic: 角色/歌曲名称
+            - generic [ref=e252]:
+              - generic: 来源作品
+              - generic [ref=e253]:
+                - textbox "来源作品" [ref=e254]
+                - group:
+                  - generic: 来源作品
+          - generic [ref=e255]:
+            - generic [ref=e256]:
+              - generic: 封面图片URL
+              - generic [ref=e257]:
+                - textbox "封面图片URL" [ref=e258]:
+                  - /placeholder: https://example.com/image.jpg
+                - group:
+                  - generic: 封面图片URL
+            - paragraph [ref=e259]: 或
+            - button "上传图片" [ref=e260] [cursor=pointer]:
+              - img [ref=e262]
+              - text: 上传图片
+          - generic [ref=e264]:
+            - generic [ref=e265]:
+              - generic: 台词/歌词
+              - generic [ref=e266]:
+                - textbox "台词/歌词" [ref=e267]
+                - group:
+                  - generic: 台词/歌词
+            - generic [ref=e268]:
+              - paragraph [ref=e269]: "颜色:"
+              - textbox [ref=e270] [cursor=pointer]: "#ff6b9d"
+          - button "添加自定义卡牌" [ref=e271] [cursor=pointer]:
+            - img [ref=e273]
+            - text: 添加自定义卡牌
+      - generic [ref=e275]:
+        - button "开始游戏" [ref=e276] [cursor=pointer]:
+          - img [ref=e277]
+          - text: 开始游戏
+        - button "解散房间" [ref=e279] [cursor=pointer]: 解散房间
+```

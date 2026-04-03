@@ -1,0 +1,360 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-pink: #ff6b9d;
+  --secondary-pink: #ffc2d1;
+  --accent-purple: #c77dff;
+  --accent-blue: #7b9fff;
+  --dark-purple: #2d1b4e;
+  --light-purple: #f8e8ff;
+  --gold: #ffd700;
+  --success-green: #4ade80;
+  --error-red: #ff4757;
+  
+  --bg-gradient-start: #fce4ec;
+  --bg-gradient-end: #e3f2fd;
+  --accent-yellow: #ffeb3b;
+  --accent-coral: #ff8a80;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, #fff 50%, var(--bg-gradient-end) 100%);
+  min-height: 100vh;
+  color: #4a4a6a;
+}
+
+.anime-card {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 8px 32px rgba(255, 107, 157, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.anime-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 40px rgba(255, 107, 157, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.anime-button {
+  border-radius: 16px;
+  font-family: 'ZCOOL KuaiLe', 'Noto Sans SC', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.anime-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+  pointer-events: none;
+}
+
+.anime-button-primary {
+  background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+  color: white;
+  box-shadow: 
+    0 4px 20px rgba(255, 107, 157, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.anime-button-primary:hover {
+  background: linear-gradient(135deg, #ff8fab 0%, #ff6b9d 100%);
+  box-shadow: 
+    0 6px 25px rgba(255, 107, 157, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.anime-button-secondary {
+  background: linear-gradient(135deg, #c77dff 0%, #d4a5ff 100%);
+  color: white;
+  box-shadow: 
+    0 4px 20px rgba(199, 125, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.anime-button-accent {
+  background: linear-gradient(135deg, #ffeb3b 0%, #fff176 100%);
+  color: #5a4a00;
+  box-shadow: 
+    0 4px 20px rgba(255, 235, 59, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.sakura-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sakura {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(ellipse at center, #ffb7c5 0%, #ff9eb5 50%, transparent 70%);
+  border-radius: 50% 0 50% 50%;
+  opacity: 0.7;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg) translateX(0);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg) translateX(100px);
+    opacity: 0.2;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(10deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 157, 0.5); }
+  50% { box-shadow: 0 0 40px rgba(255, 107, 157, 1), 0 0 60px rgba(199, 125, 255, 0.8); }
+}
+
+@keyframes countdown-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes egg-throw {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--throw-x), var(--throw-y)) rotate(720deg); opacity: 0; }
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, var(--primary-pink), var(--accent-purple), var(--accent-blue));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.card-glow {
+  box-shadow: 0 0 30px rgba(255, 107, 157, 0.6);
+}
+
+.card-correct {
+  animation: correct-flash 0.6s ease;
+  border-color: var(--success-green) !important;
+  box-shadow: 0 0 30px rgba(74, 222, 128, 0.6) !important;
+}
+
+@keyframes correct-flash {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.card-wrong {
+  animation: shake 0.5s ease;
+  border-color: var(--error-red) !important;
+  box-shadow: 0 0 30px rgba(255, 71, 87, 0.6) !important;
+}
+
+.locked-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  z-index: 10;
+}
+
+.circular-progress {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.circular-progress svg {
+  transform: rotate(-90deg);
+}
+
+.circular-progress circle {
+  fill: none;
+  stroke-width: 4;
+}
+
+.circular-progress .bg {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+
+.circular-progress .progress {
+  stroke: var(--primary-pink);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+.egg-animation {
+  position: fixed;
+  font-size: 2rem;
+  z-index: 1000;
+  pointer-events: none;
+  animation: egg-throw 1s ease-out forwards;
+}
+
+.combo-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+  pointer-events: none;
+  z-index: 50;
+  animation: combo-pop 0.8s ease forwards;
+}
+
+@keyframes combo-pop {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -80%) scale(1); opacity: 0; }
+}
+
+.points-popup {
+  position: fixed;
+  pointer-events: none;
+  z-index: 50;
+  font-size: 1.5rem;
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  color: var(--success-green);
+  text-shadow: 0 0 20px rgba(74, 222, 128, 0.8);
+  animation: points-float 1s ease forwards;
+}
+
+@keyframes points-float {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-50px); opacity: 0; }
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 8px 32px rgba(255, 107, 157, 0.12),
+    inset 0 2px 0 rgba(255, 255, 255, 0.9);
+}
+
+.glass-panel-dark {
+  background: rgba(45, 27, 78, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.game-card {
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,240,250,0.9));
+  border: 2px solid rgba(255, 107, 157, 0.3);
+  box-shadow: 
+    0 4px 20px rgba(255, 107, 157, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.game-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(255, 107, 157, 0.6);
+  box-shadow: 
+    0 12px 35px rgba(255, 107, 157, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.game-card-selected {
+  border-color: var(--accent-purple);
+  box-shadow: 
+    0 0 0 3px rgba(199, 125, 255, 0.3),
+    0 12px 35px rgba(199, 125, 255, 0.3);
+}
+
+.title-anime {
+  font-family: 'ZCOOL KuaiLe', sans-serif;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.subtitle-anime {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+.sparkle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #fff 0%, transparent 70%);
+  animation: sparkle 1.5s ease-in-out infinite;
+}
