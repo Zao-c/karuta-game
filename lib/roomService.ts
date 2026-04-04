@@ -6,6 +6,7 @@ import type { Room, RoomPlayer } from './database.types';
 const db = supabase as any;
 const LOBBY_ROOM_TTL_MS = 10 * 60 * 1000;
 const ENDED_ROOM_TTL_MS = 5 * 60 * 1000;
+const ACTIVE_ROOM_TTL_MS = 60 * 60 * 1000;
 
 export type RoomInfo = {
   id: string;
@@ -86,6 +87,7 @@ class RoomService {
     const now = Date.now();
     const staleLobbyCutoff = new Date(now - LOBBY_ROOM_TTL_MS).toISOString();
     const endedRoomCutoff = new Date(now - ENDED_ROOM_TTL_MS).toISOString();
+    const activeRoomCutoff = new Date(now - ACTIVE_ROOM_TTL_MS).toISOString();
 
     const { error: endedError } = await db
       .from('rooms')
@@ -95,6 +97,16 @@ class RoomService {
 
     if (endedError) {
       console.error('Error cleaning up ended rooms:', endedError);
+    }
+
+    const { error: activeRoomError } = await db
+      .from('rooms')
+      .delete()
+      .eq('game_phase', 2)
+      .lt('created_at', activeRoomCutoff);
+
+    if (activeRoomError) {
+      console.error('Error cleaning up long-running active rooms:', activeRoomError);
     }
 
     const { error: staleLobbyError } = await db

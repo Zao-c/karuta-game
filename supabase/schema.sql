@@ -212,6 +212,10 @@ BEGIN
   DELETE FROM rooms 
   WHERE game_ended_at IS NOT NULL 
   AND game_ended_at < NOW() - INTERVAL '5 minutes';
+
+  DELETE FROM rooms
+  WHERE game_phase = 2
+  AND created_at < NOW() - INTERVAL '1 hour';
   
   DELETE FROM rooms 
   WHERE created_at < NOW() - INTERVAL '10 minutes'

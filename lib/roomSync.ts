@@ -28,6 +28,7 @@ const ROOMS_LIST_KEY = 'karuta_rooms_list';
 const BROADCAST_CHANNEL_NAME = 'karuta_game_channel';
 const GAME_ENDED_TIMEOUT = 5 * 60 * 1000;
 const SINGLE_PLAYER_TIMEOUT = 10 * 60 * 1000;
+const ACTIVE_ROOM_TIMEOUT = 60 * 60 * 1000;
 
 class RoomSyncService {
   private channel: BroadcastChannel | null = null;
@@ -76,6 +77,13 @@ class RoomSyncService {
       
       if (room.gamePhase === GamePhase.GameEnd && room.gameEndedAt) {
         if (now - room.gameEndedAt > GAME_ENDED_TIMEOUT) {
+          this.deleteRoom(room.roomId);
+          return;
+        }
+      }
+
+      if (room.gamePhase === GamePhase.Playing && room.createdAt) {
+        if (now - room.createdAt > ACTIVE_ROOM_TIMEOUT) {
           this.deleteRoom(room.roomId);
           return;
         }

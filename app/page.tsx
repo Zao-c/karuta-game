@@ -513,6 +513,7 @@ export default function GamePage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const successAudioRef = useRef<HTMLAudioElement | null>(null);
   const failAudioRef = useRef<HTMLAudioElement | null>(null);
+  const autoAdvanceTurnRef = useRef<string | null>(null);
   
   const [roomState, setRoomState] = useState<RoomState>({
     roomId: '',
@@ -1899,28 +1900,54 @@ export default function GamePage() {
   }, [roomState.gamePhase, roomState.paused, simulateBotPlay]);
   
   const TURN_DURATION = 60;
-  
-  const remainingTime = useMemo(() => {
-    if (roomState.gamePhase !== GamePhase.Playing) return TURN_DURATION;
-    if (!roomState.turnStartTime) return TURN_DURATION;
-    if (roomState.paused) return roomState.pausedTimeRemaining || TURN_DURATION;
-    
-    const elapsed = Math.floor((Date.now() - roomState.turnStartTime) / 1000);
-    const remaining = Math.max(0, TURN_DURATION - elapsed);
-    return remaining;
-  }, [roomState.gamePhase, roomState.turnStartTime, roomState.paused, roomState.pausedTimeRemaining]);
-  
+  const remainingTime = turnTimer;
+
   useEffect(() => {
-    if (roomState.gamePhase === GamePhase.Playing && !roomState.paused && roomState.turnStartTime) {
-      const interval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - (roomState.turnStartTime || 0)) / 1000);
-        if (elapsed >= TURN_DURATION && isHost) {
-          nextTurn();
-        }
-      }, 1000);
-      return () => clearInterval(interval);
+    autoAdvanceTurnRef.current = null;
+  }, [roomState.gamePhase, roomState.turnStartTime]);
+
+  useEffect(() => {
+    if (roomState.gamePhase !== GamePhase.Playing) {
+      setTurnTimer(TURN_DURATION);
+      return;
     }
-  }, [roomState.gamePhase, roomState.turnStartTime, roomState.paused, isHost, nextTurn]);
+
+    if (!roomState.turnStartTime) {
+      setTurnTimer(TURN_DURATION);
+      return;
+    }
+
+    if (roomState.paused) {
+      setTurnTimer(roomState.pausedTimeRemaining || TURN_DURATION);
+      return;
+    }
+
+    const turnStartTime = roomState.turnStartTime;
+    const currentTurnKey = String(turnStartTime);
+
+    const syncTurnTimer = () => {
+      const elapsed = Math.floor((Date.now() - turnStartTime) / 1000);
+      const remaining = Math.max(0, TURN_DURATION - elapsed);
+
+      setTurnTimer((prev) => (prev === remaining ? prev : remaining));
+
+      if (remaining <= 0 && isHost && autoAdvanceTurnRef.current !== currentTurnKey) {
+        autoAdvanceTurnRef.current = currentTurnKey;
+        void nextTurn();
+      }
+    };
+
+    syncTurnTimer();
+    const interval = setInterval(syncTurnTimer, 250);
+    return () => clearInterval(interval);
+  }, [
+    roomState.gamePhase,
+    roomState.turnStartTime,
+    roomState.paused,
+    roomState.pausedTimeRemaining,
+    isHost,
+    nextTurn,
+  ]);
   
   useEffect(() => {
     if (roomState.gamePhase === GamePhase.Lobby) return;
