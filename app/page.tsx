@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import {
@@ -57,10 +57,10 @@ function generatePlayerId(): number {
 }
 
 function getRoomPhaseLabel(phase: GamePhase | number): string {
-  if (phase === GamePhase.Lobby || phase === 0) return '鍑嗗涓?;
-  if (phase === GamePhase.Playing || phase === 2) return '娓告垙涓?;
-  if (phase === GamePhase.GameEnd || phase === 3) return '宸茬粨鏉?;
-  return '杩涜涓?;
+  if (phase === GamePhase.Lobby || phase === 0) return '准备中';
+  if (phase === GamePhase.Playing || phase === 2) return '游戏中';
+  if (phase === GamePhase.GameEnd || phase === 3) return '已结束';
+  return '进行中';
 }
 
 function SakuraBackground() {
@@ -94,7 +94,7 @@ function renderUserAvatar(avatar: string | undefined, size: number = 40) {
   if (!avatar) {
     return (
       <Avatar sx={{ width: size, height: size, bgcolor: '#ff6b9d', fontSize: size * 0.4 }}>
-        馃幃
+        🎮
       </Avatar>
     );
   }
@@ -103,7 +103,7 @@ function renderUserAvatar(avatar: string | undefined, size: number = 40) {
     const [, emoji, color] = avatar.split(':');
     return (
       <Avatar sx={{ width: size, height: size, bgcolor: color || '#ff6b9d', fontSize: size * 0.4 }}>
-        {emoji || '馃幃'}
+        {emoji || '🎮'}
       </Avatar>
     );
   }
@@ -304,7 +304,7 @@ function PlayerSeat({
                 height: 40,
               }}
             >
-              {player.avatar.split(':')[1] || '馃幃'}
+              {player.avatar.split(':')[1] || '🎮'}
             </Avatar>
           ) : (
             <Avatar
@@ -330,14 +330,14 @@ function PlayerSeat({
           </Typography>
           <Stack direction="row" spacing={1} alignItems="center">
             <Chip
-              label={`${player.score}鍒哷}
+              label={`${player.score}分`}
               size="small"
               sx={{ height: 20, fontSize: '0.7rem' }}
               color="primary"
             />
             {player.combo > 0 && (
               <Chip
-                label={`${player.combo}杩炲嚮`}
+                label={`${player.combo}连击`}
                 size="small"
                 sx={{ height: 20, fontSize: '0.7rem' }}
                 color="secondary"
@@ -346,9 +346,9 @@ function PlayerSeat({
           </Stack>
         </Box>
         {showControls && !isSelf && onThrowEgg && (
-          <Tooltip title="鎵旈浮铔?>
+          <Tooltip title="扔鸡蛋">
             <IconButton size="small" onClick={onThrowEgg}>
-              馃
+              🥚
             </IconButton>
           </Tooltip>
         )}
@@ -367,7 +367,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
   
   const handleAddCard = () => {
     if (!name || !anime || !coverUrl || !quote) {
-      alert('璇峰～鍐欐墍鏈夊瓧娈碉紒');
+      alert('请填写所有字段！');
       return;
     }
     
@@ -402,7 +402,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
       });
       setCoverUrl(uploadResult.publicUrl);
     } catch (error) {
-      alert(`鍥剧墖涓婁紶澶辫触锛?{error instanceof Error ? error.message : '璇风◢鍚庨噸璇?}`);
+      alert(`图片上传失败：${error instanceof Error ? error.message : '请稍后重试'}`);
     } finally {
       setUploadingCover(false);
       e.target.value = '';
@@ -413,14 +413,14 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
     <Stack spacing={2}>
       <Stack direction="row" spacing={2}>
         <TextField
-          label="瑙掕壊/姝屾洸鍚嶇О"
+          label="角色/歌曲名称"
           value={name}
           onChange={(e) => setName(e.target.value)}
           size="small"
           sx={{ flex: 1 }}
         />
         <TextField
-          label="鏉ユ簮浣滃搧"
+          label="来源作品"
           value={anime}
           onChange={(e) => setAnime(e.target.value)}
           size="small"
@@ -430,14 +430,14 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
       
       <Stack direction="row" spacing={2} alignItems="center">
         <TextField
-          label="灏侀潰鍥剧墖URL"
+          label="封面图片URL"
           value={coverUrl}
           onChange={(e) => setCoverUrl(e.target.value)}
           size="small"
           sx={{ flex: 1 }}
           placeholder="https://example.com/image.jpg"
         />
-        <Typography sx={{ color: '#999' }}>鎴?/Typography>
+        <Typography sx={{ color: '#999' }}>或</Typography>
         <Button
           variant="outlined"
           component="label"
@@ -445,7 +445,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
           startIcon={<Upload />}
           disabled={uploadingCover}
         >
-          {uploadingCover ? '涓婁紶涓?..' : '涓婁紶鍥剧墖'}
+          {uploadingCover ? '上传中...' : '上传图片'}
           <input
             type="file"
             hidden
@@ -457,7 +457,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
       
       <Stack direction="row" spacing={2}>
         <TextField
-          label="鍙拌瘝/姝岃瘝"
+          label="台词/歌词"
           value={quote}
           onChange={(e) => setQuote(e.target.value)}
           size="small"
@@ -466,7 +466,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
           maxRows={2}
         />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography sx={{ color: '#999', fontSize: '0.8rem' }}>棰滆壊:</Typography>
+          <Typography sx={{ color: '#999', fontSize: '0.8rem' }}>颜色:</Typography>
           <input
             type="color"
             value={color}
@@ -487,7 +487,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
               border: '1px solid rgba(255,255,255,0.2)',
             }}
           />
-          <Typography sx={{ color: '#999', fontSize: '0.8rem' }}>灏侀潰棰勮</Typography>
+          <Typography sx={{ color: '#999', fontSize: '0.8rem' }}>封面预览</Typography>
         </Box>
       )}
       
@@ -502,7 +502,7 @@ function CustomCardUploader({ onAddCard }: { onAddCard: (card: CustomCard) => vo
           },
         }}
       >
-        娣诲姞鑷畾涔夊崱鐗?
+        添加自定义卡牌
       </Button>
     </Stack>
   );
@@ -585,7 +585,7 @@ export default function GamePage() {
   const observerCount = roomState.players.filter((player) => player.isObserver).length;
   const isLikelyGuestUser = useMemo(() => {
     if (!userProfile) return true;
-    return !userProfile.bio && (userProfile.displayName.startsWith('娓稿') || !!userProfile.id);
+    return !userProfile.bio && (userProfile.displayName.startsWith('游客') || !!userProfile.id);
   }, [userProfile]);
   const inviteUrl = useMemo(() => {
     if (!roomState.roomId) return '';
@@ -612,7 +612,7 @@ export default function GamePage() {
   const showComboPopup = useCallback((combo: number) => {
     const popup = document.createElement('div');
     popup.className = 'combo-popup';
-    popup.textContent = `${combo}杩炲嚮锛乣;
+    popup.textContent = `${combo}连击！`;
     document.body.appendChild(popup);
     setTimeout(() => popup.remove(), 800);
   }, []);
@@ -630,7 +630,7 @@ export default function GamePage() {
   const throwEgg = useCallback((targetId: number) => {
     const egg = document.createElement('div');
     egg.className = 'egg-animation';
-    egg.textContent = '馃';
+    egg.textContent = '🥚';
     egg.style.left = '50%';
     egg.style.top = '50%';
     egg.style.setProperty('--throw-x', `${(Math.random() - 0.5) * 200}px`);
@@ -649,18 +649,18 @@ export default function GamePage() {
 
   const describeSupabaseFailure = useCallback(async (action: 'create' | 'join', error?: unknown) => {
     const diagnostic: SupabaseRoomDiagnostic = await roomService.diagnoseSupabaseRoomAccess();
-    const actionLabel = action === 'create' ? '鍒涘缓鎴块棿' : '鍔犲叆鎴块棿';
+    const actionLabel = action === 'create' ? '创建房间' : '加入房间';
     const errorMessage =
       error instanceof Error ? error.message :
       typeof error === 'string' ? error :
       '';
 
-    showConnectionNotice('error', `${actionLabel}澶辫触`, [
-      `${actionLabel}褰撳墠璧扮殑鏄?Supabase 鑱旀満妯″紡銆俙,
+    showConnectionNotice('error', `${actionLabel}失败`, [
+      `${actionLabel}当前走的是 Supabase 联机模式。`,
       diagnostic.summary,
-      ...(errorMessage ? [`杩愯鏃堕敊璇? ${errorMessage}`] : []),
+      ...(errorMessage ? [`运行时错误: ${errorMessage}`] : []),
       ...diagnostic.details,
-      '濡傛灉浣犳鍦ㄥ垵濮嬪寲杩滅搴擄紝璇峰厛鎵ц SUPABASE_SETUP.md 閲岀殑 schema.sql锛岀劧鍚庡埛鏂伴〉闈㈠啀璇曘€?,
+      '如果你正在初始化远端库，请先执行 SUPABASE_SETUP.md 里的 schema.sql，然后刷新页面再试。',
     ]);
   }, [showConnectionNotice]);
   
@@ -793,9 +793,9 @@ export default function GamePage() {
 
     setJoinRoomId(roomFromLink);
     setShowJoinDialog(true);
-    showConnectionNotice('info', '宸茶瘑鍒個璇烽摼鎺?, [
-      `妫€娴嬪埌鎴块棿鍙?${roomFromLink}銆俙,
-      '纭鏄电О鍚庯紝鐐光€滃姞鍏ユ父鎴忊€濇垨鈥滄梺瑙傗€濆氨鑳界洿鎺ヨ繘鍏ャ€?,
+    showConnectionNotice('info', '已识别邀请链接', [
+      `检测到房间号 ${roomFromLink}。`,
+      '确认昵称后，点“加入游戏”或“旁观”就能直接进入。',
     ]);
   }, [roomState.roomId, showConnectionNotice]);
   
@@ -1012,7 +1012,7 @@ export default function GamePage() {
       } catch (error) {
         console.error('Failed to create room:', error);
         await describeSupabaseFailure('create', error);
-        alert('鍒涘缓鎴块棿澶辫触锛?);
+        alert('创建房间失败！');
       }
     } else {
       setConnectionNotice(null);
@@ -1078,7 +1078,7 @@ export default function GamePage() {
     const trimmedRoomId = roomId.trim().toUpperCase();
     
     if (!trimmedRoomId) {
-      alert('璇疯緭鍏ユ埧闂村彿锛?);
+      alert('请输入房间号！');
       return;
     }
     
@@ -1147,18 +1147,18 @@ export default function GamePage() {
           setJoinRoomId('');
         } else {
           await describeSupabaseFailure('join');
-          alert('鎴块棿涓嶅瓨鍦紒璇锋鏌ユ埧闂村彿鏄惁姝ｇ‘銆?);
+          alert('房间不存在！请检查房间号是否正确。');
         }
       } catch (error) {
         console.error('Failed to join room:', error);
         await describeSupabaseFailure('join', error);
-        alert('鍔犲叆鎴块棿澶辫触锛?);
+        alert('加入房间失败！');
       }
     } else {
       setConnectionNotice(null);
       const existingRoom = roomSync.getRoom(trimmedRoomId);
       if (!existingRoom) {
-        alert('鎴块棿涓嶅瓨鍦紒璇锋鏌ユ埧闂村彿鏄惁姝ｇ‘銆?);
+        alert('房间不存在！请检查房间号是否正确。');
         return;
       }
       
@@ -1185,7 +1185,7 @@ export default function GamePage() {
       const updatedRoom = roomSync.joinRoom(trimmedRoomId, newPlayer);
       
       if (!updatedRoom) {
-        alert('鍔犲叆鎴块棿澶辫触锛?);
+        alert('加入房间失败！');
         return;
       }
       
@@ -1261,7 +1261,7 @@ export default function GamePage() {
   const startGame = useCallback(async () => {
     const allReady = roomState.players.every(p => p.isReady || p.isObserver);
     if (!allReady) {
-      alert('杩樻湁鐜╁鏈噯澶囷紒');
+      alert('还有玩家未准备！');
       return;
     }
     
@@ -1272,7 +1272,7 @@ export default function GamePage() {
         id: card.id,
         name: card.name,
         anime: card.anime,
-        emoji: '馃幀',
+        emoji: '🎬',
         card: [`${card.id}-1`],
         quotes: card.quotes,
         color: card.color,
@@ -1285,7 +1285,7 @@ export default function GamePage() {
     }
     
     if (allCharacters.length === 0) {
-      alert('娌℃湁鍙敤鐨勫崱鐗岋紒');
+      alert('没有可用的卡牌！');
       return;
     }
     
@@ -1400,11 +1400,11 @@ export default function GamePage() {
   
   const saveCurrentDeck = useCallback(async () => {
     if (roomState.customCards.length === 0) {
-      alert('娌℃湁鍙繚瀛樼殑鑷畾涔夊崱鐗岋紒');
+      alert('没有可保存的自定义卡牌！');
       return;
     }
     if (!newDeckName.trim()) {
-      alert('璇疯緭鍏ョ墝缁勫悕绉帮紒');
+      alert('请输入牌组名称！');
       return;
     }
     
@@ -1420,9 +1420,9 @@ export default function GamePage() {
       setNewDeckDescription('');
       setShowSaveDeckDialog(false);
       setGlobalDecks(globalDeckService.getDecks());
-      alert('鐗岀粍淇濆瓨鎴愬姛锛?);
+      alert('牌组保存成功！');
     } catch (error) {
-      alert(`鐗岀粍淇濆瓨澶辫触锛?{error instanceof Error ? error.message : '璇风◢鍚庨噸璇?}`);
+      alert(`牌组保存失败：${error instanceof Error ? error.message : '请稍后重试'}`);
     }
   }, [roomState.customCards, newDeckName, newDeckDescription, playerName]);
   
@@ -1439,12 +1439,12 @@ export default function GamePage() {
   }, [roomState]);
   
   const deleteGlobalDeck = useCallback(async (deckId: string) => {
-    if (confirm('纭畾瑕佸垹闄よ繖涓墝缁勫悧锛?)) {
+    if (confirm('确定要删除这个牌组吗？')) {
       try {
         await globalDeckService.deleteDeckAsync(deckId);
         setGlobalDecks(globalDeckService.getDecks());
       } catch (error) {
-        alert(`鍒犻櫎鐗岀粍澶辫触锛?{error instanceof Error ? error.message : '璇风◢鍚庨噸璇?}`);
+        alert(`删除牌组失败：${error instanceof Error ? error.message : '请稍后重试'}`);
       }
     }
   }, []);
@@ -1462,7 +1462,7 @@ export default function GamePage() {
   }
 
   async function ensureGuestSessionForOnlinePlay(requestedName?: string) {
-    const fallbackName = `娓稿${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const fallbackName = `游客${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
     const effectiveName = (requestedName ?? playerName).trim().slice(0, 12) || fallbackName;
     const localProfile = syncProfileToLobby(effectiveName);
 
@@ -1480,10 +1480,10 @@ export default function GamePage() {
       const result = await authService.ensureGuestSession(effectiveName);
       if (!result.success || !result.user) {
         setGuestSessionReady(false);
-        showConnectionNotice('warning', '娓稿韬唤灏嗕互涓存椂妯″紡杩愯', [
-          '鑱旀満浠嶇劧鍙互缁х画锛屾埧闂淬€佽亰澶╁拰閫夌墝鍚屾涓嶄細鍙楀奖鍝嶃€?,
-          '鍙槸涓汉璧勬枡銆佺墝缁勫拰姝屾洸搴撲笉浼氱粦瀹氬埌浜戠璐﹀彿銆?,
-          result.error || '鍖垮悕娓稿鐧诲綍澶辫触锛岃绋嶅悗閲嶈瘯銆?,
+        showConnectionNotice('warning', '游客身份将以临时模式运行', [
+          '联机仍然可以继续，房间、聊天和选牌同步不会受影响。',
+          '只是个人资料、牌组和歌曲库不会绑定到云端账号。',
+          result.error || '匿名游客登录失败，请稍后重试。',
         ]);
         return {
           ok: true as const,
@@ -1498,7 +1498,7 @@ export default function GamePage() {
         bio: result.user.bio,
       });
       setGuestSessionReady(true);
-      setConnectionNotice((prev) => prev?.title === '娓稿韬唤灏嗕互涓存椂妯″紡杩愯' ? null : prev);
+      setConnectionNotice((prev) => prev?.title === '游客身份将以临时模式运行' ? null : prev);
 
       return {
         ok: true as const,
@@ -1729,41 +1729,41 @@ export default function GamePage() {
   
   const copyRoomId = useCallback(() => {
     navigator.clipboard.writeText(roomState.roomId);
-    showConnectionNotice('info', '鎴块棿鍙峰凡澶嶅埗', [
-      `鎶婃埧闂村彿 ${roomState.roomId} 鍙戠粰浣犵殑鏈嬪弸鍗冲彲鍔犲叆銆俙,
-      '濡傛灉鏈嬪弸宸茬粡鎵撳紑鍚屼竴涓綉绔欙紝涔熷彲浠ョ洿鎺ュ湪澶у巺閲岀湅鍒颁綘鐨勬埧闂淬€?,
+    showConnectionNotice('info', '房间号已复制', [
+      `把房间号 ${roomState.roomId} 发给你的朋友即可加入。`,
+      '如果朋友已经打开同一个网站，也可以直接在大厅里看到你的房间。',
     ]);
   }, [roomState.roomId, showConnectionNotice]);
 
   const copyInviteLink = useCallback(() => {
     if (!inviteUrl) {
-      showConnectionNotice('warning', '閭€璇烽摼鎺ユ殏涓嶅彲鐢?, [
-        '褰撳墠杩樻病鏈夊彲澶嶅埗鐨勫叕缃戝湴鍧€銆?,
-        '閮ㄧ讲鍒?Vercel 鍚庯紝杩欓噷浼氳嚜鍔ㄧ敓鎴愬彲鐩存帴鎵撳紑鐨勫叆鎴块摼鎺ャ€?,
+      showConnectionNotice('warning', '邀请链接暂不可用', [
+        '当前还没有可复制的公网地址。',
+        '部署到 Vercel 后，这里会自动生成可直接打开的入房链接。',
       ]);
       return;
     }
 
     navigator.clipboard.writeText(inviteUrl);
-    showConnectionNotice('info', '閭€璇烽摼鎺ュ凡澶嶅埗', [
-      '宸茬粡澶嶅埗鍙洿鎺ユ墦寮€鐨勮繘鎴块摼鎺ャ€?,
-      '鏈嬪弸鐐瑰紑鍚庝細鑷姩甯︿笂鎴块棿鍙枫€?,
+    showConnectionNotice('info', '邀请链接已复制', [
+      '已经复制可直接打开的进房链接。',
+      '朋友点开后会自动带上房间号。',
     ]);
   }, [inviteUrl, showConnectionNotice]);
 
   const copyInviteMessage = useCallback(() => {
     const inviteMessage = [
-      '鏉ヤ竴璧风帺浜屾鍏冩瓕鐗屽惂锛?,
-      `鎴块棿鍙凤細${roomState.roomId}`,
-      `褰撳墠鐘舵€侊細${getRoomPhaseLabel(roomState.gamePhase)}`,
-      isHost ? '鎴戞槸鎴夸富锛屼綘杩涙潵鍚庣洿鎺ョ偣鍔犲叆灏辫銆? : '杩涘叆缃戠珯鍚庤緭鍏ユ埧闂村彿鍗冲彲鍔犲叆銆?,
+      '来一起玩二次元歌牌吧！',
+      `房间号：${roomState.roomId}`,
+      `当前状态：${getRoomPhaseLabel(roomState.gamePhase)}`,
+      isHost ? '我是房主，你进来后直接点加入就行。' : '进入网站后输入房间号即可加入。',
       ...(inviteUrl ? [`直接加入：${inviteUrl}`] : []),
     ].join('\n');
 
     navigator.clipboard.writeText(inviteMessage);
-    showConnectionNotice('info', '閭€璇锋枃妗堝凡澶嶅埗', [
-      '宸茬粡甯綘鐢熸垚涓€娈靛彲浠ョ洿鎺ュ彂缁欐湅鍙嬬殑閭€璇锋枃鏈€?,
-      '浣犲彲浠ョ矘璐村埌 QQ銆佸井淇°€丏iscord 鎴栧叾浠栬亰澶╁伐鍏烽噷銆?,
+    showConnectionNotice('info', '邀请文案已复制', [
+      '已经帮你生成一段可以直接发给朋友的邀请文本。',
+      '你可以粘贴到 QQ、微信、Discord 或其他聊天工具里。',
     ]);
   }, [inviteUrl, isHost, roomState.gamePhase, roomState.roomId, showConnectionNotice]);
   
@@ -1824,12 +1824,12 @@ export default function GamePage() {
   
   const addTestBot = useCallback(async () => {
     if (roomState.players.length >= 8) {
-      alert('鎴块棿宸叉弧锛?);
+      alert('房间已满！');
       return;
     }
     
     const botId = `bot-${Date.now()}`;
-    const botName = `娴嬭瘯鏈哄櫒浜?{roomState.players.filter(p => String(p.id).startsWith('bot')).length + 1}`;
+    const botName = `测试机器人${roomState.players.filter(p => String(p.id).startsWith('bot')).length + 1}`;
     
     const newBot: PlayerInfo = {
       id: botId,
@@ -1978,7 +1978,7 @@ export default function GamePage() {
             id: card.id,
             name: card.name,
             anime: card.anime,
-            emoji: '馃幋',
+            emoji: '🎴',
             card: [],
             quotes: card.quotes,
             color: card.color,
@@ -2096,10 +2096,10 @@ export default function GamePage() {
                 animation: 'gradient-shift 4s ease infinite',
               }}
             >
-              馃尭 浜屾鍏冩瓕鐗?2.0 馃尭
+              🌸 二次元歌牌 2.0 🌸
             </Typography>
             <Typography sx={{ textAlign: 'center', color: '#ff6b9d', mb: 3, fontWeight: 500 }}>
-              Anime Karuta ~ 2026骞存柊鐣増
+              Anime Karuta ~ 2026年新番版
             </Typography>
             
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -2135,7 +2135,7 @@ export default function GamePage() {
             
             <TextField
               fullWidth
-              label="浣犵殑鏄电О"
+              label="你的昵称"
               value={playerName}
               onChange={(e) => {
                 const newName = e.target.value.slice(0, 12);
@@ -2161,16 +2161,16 @@ export default function GamePage() {
               sx={{ mb: 3, borderRadius: 3 }}
             >
               <Typography sx={{ fontWeight: 700, mb: 0.5 }}>
-                {guestSessionReady ? '娓稿韬唤宸插氨缁? : '鏃犻渶娉ㄥ唽涔熻兘鑱旀満'}
+                {guestSessionReady ? '游客身份已就绪' : '无需注册也能联机'}
               </Typography>
               <Typography sx={{ fontSize: '0.9rem' }}>
                 {guestSessionPending
-                  ? '姝ｅ湪涓轰綘鍑嗗娓稿韬唤锛岀◢绛夊嚑绉掑悗灏辫兘寤烘埧鎴栧姞鎴裤€?
-                  : `鐩存帴杈撳叆鏄电О灏辫兘寮€濮嬨€?{isSupabaseConfigured() ? '鐐光€滃垱寤烘埧闂粹€濇垨鈥滆緭鍏ユ埧闂村彿鈥濇椂锛岀郴缁熶細鑷姩寤虹珛 Supabase 娓稿韬唤銆? : '褰撳墠鏄湰鍦版ā寮忥紝绋嶅悗閮ㄧ讲鍒板叕缃戝悗涔熷彲浠ユ部鐢ㄨ繖濂楁父瀹㈡祦绋嬨€?}`}
+                  ? '正在为你准备游客身份，稍等几秒后就能建房或加房。'
+                  : `直接输入昵称就能开始。${isSupabaseConfigured() ? '点“创建房间”或“输入房间号”时，系统会自动建立 Supabase 游客身份。' : '当前是本地模式，稍后部署到公网后也可以沿用这套游客流程。'}`}
               </Typography>
               {isLikelyGuestUser && userProfile && (
                 <Typography sx={{ fontSize: '0.85rem', mt: 0.75 }}>
-                  褰撳墠韬唤锛歿userProfile.displayName} / {userProfile.id}
+                  当前身份：{userProfile.displayName} / {userProfile.id}
                 </Typography>
               )}
             </Alert>
@@ -2199,7 +2199,7 @@ export default function GamePage() {
             )}
             
             <Typography sx={{ mb: 1, color: '#ff6b9d', fontSize: '0.9rem', fontWeight: 500 }}>
-              閫夋嫨鐗岀粍
+              选择牌组
             </Typography>
             <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
               <Paper
@@ -2215,10 +2215,10 @@ export default function GamePage() {
                 }}
               >
                 <Typography sx={{ fontWeight: 'bold', color: '#ff6b9d', mb: 0.5 }}>
-                  馃尭 2026骞存柊鐣?
+                  🌸 2026年新番
                 </Typography>
                 <Typography sx={{ fontSize: '0.75rem', color: '#888' }}>
-                  30寮犵簿閫夋柊鐣崱鐗?
+                  30张精选新番卡牌
                 </Typography>
               </Paper>
               <Paper
@@ -2234,10 +2234,10 @@ export default function GamePage() {
                 }}
               >
                 <Typography sx={{ fontWeight: 'bold', color: '#c77dff', mb: 0.5 }}>
-                  馃帹 鑷畾涔夌墝缁?
+                  🎨 自定义牌组
                 </Typography>
                 <Typography sx={{ fontSize: '0.75rem', color: '#888' }}>
-                  杩涘叆鎴块棿鍚庝笂浼犲崱鐗?
+                  进入房间后上传卡牌
                 </Typography>
               </Paper>
             </Stack>
@@ -2256,7 +2256,7 @@ export default function GamePage() {
                 }}
               >
                 <Groups sx={{ mr: 1 }} />
-                鍒涘缓鎴块棿
+                创建房间
               </Button>
               <Button
                 fullWidth
@@ -2272,7 +2272,7 @@ export default function GamePage() {
                 }}
               >
                 <Person sx={{ mr: 1 }} />
-                杈撳叆鎴块棿鍙?
+                输入房间号
               </Button>
             </Stack>
             
@@ -2293,7 +2293,7 @@ export default function GamePage() {
                 },
               }}
             >
-              馃幍 鐚滄瓕妯″紡
+              🎵 猜歌模式
             </Button>
             
             <Button
@@ -2313,7 +2313,7 @@ export default function GamePage() {
                 },
               }}
             >
-              馃幖 姝屾洸搴撶鐞?
+              🎼 歌曲库管理
             </Button>
           </Paper>
           
@@ -2326,12 +2326,12 @@ export default function GamePage() {
             }}
           >
             <Typography variant="h6" sx={{ mb: 2, color: '#ff6b9d', fontWeight: 'bold' }}>
-              馃彔 娓告垙澶у巺 - 褰撳墠鎴块棿 ({roomsList.length})
+              🏠 游戏大厅 - 当前房间 ({roomsList.length})
             </Typography>
             
             {roomsList.length === 0 ? (
               <Typography sx={{ color: '#888', textAlign: 'center', py: 4 }}>
-                鏆傛棤鎴块棿锛屽揩鍒涘缓涓€涓惂锛?
+                暂无房间，快创建一个吧！
               </Typography>
             ) : (
               <Stack spacing={2}>
@@ -2363,10 +2363,10 @@ export default function GamePage() {
                           }}
                         />
                         <Typography sx={{ color: '#666', fontSize: '0.9rem' }}>
-                          鎴夸富: {room.hostName}
+                          房主: {room.hostName}
                         </Typography>
                         <Typography sx={{ color: '#666', fontSize: '0.9rem' }}>
-                          鐜╁: {room.playerCount}/8
+                          玩家: {room.playerCount}/8
                         </Typography>
                       </Stack>
                     </Box>
@@ -2382,7 +2382,7 @@ export default function GamePage() {
                           borderRadius: 3,
                         }}
                       >
-                        鍙傚姞娓告垙
+                        参加游戏
                       </Button>
                       <Button
                         variant="outlined"
@@ -2395,7 +2395,7 @@ export default function GamePage() {
                           borderRadius: 3,
                         }}
                       >
-                        鏃佽
+                        旁观
                       </Button>
                     </Stack>
                   </Paper>
@@ -2405,15 +2405,15 @@ export default function GamePage() {
           </Paper>
           
           <Dialog open={showJoinDialog} onClose={() => setShowJoinDialog(false)}>
-            <DialogTitle>鍔犲叆鎴块棿</DialogTitle>
+            <DialogTitle>加入房间</DialogTitle>
             <DialogContent>
               <Typography sx={{ mt: 1, color: '#666', fontSize: '0.9rem' }}>
-                杈撳叆濂藉弸鍒嗕韩缁欎綘鐨?6 鍒?8 浣嶆埧闂村彿銆備綘涔熷彲浠ラ€夋嫨鐩存帴鍔犲叆娓告垙锛屾垨鍏堜互鏃佽韬唤杩涘叆鎴块棿銆?
+                输入好友分享给你的 6 到 8 位房间号。你也可以选择直接加入游戏，或先以旁观身份进入房间。
               </Typography>
               <TextField
                 autoFocus
                 fullWidth
-                label="鎴块棿鍙?
+                label="房间号"
                 value={joinRoomId}
                 onChange={(e) => setJoinRoomId(e.target.value.toUpperCase())}
                 sx={{ mt: 1 }}
@@ -2421,9 +2421,9 @@ export default function GamePage() {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setShowJoinDialog(false)} disabled={guestSessionPending}>鍙栨秷</Button>
-              <Button onClick={() => joinRoom(joinRoomId, true)} variant="outlined" disabled={guestSessionPending}>鏃佽</Button>
-              <Button onClick={() => joinRoom(joinRoomId, false)} variant="contained" disabled={guestSessionPending}>鍔犲叆娓告垙</Button>
+              <Button onClick={() => setShowJoinDialog(false)} disabled={guestSessionPending}>取消</Button>
+              <Button onClick={() => joinRoom(joinRoomId, true)} variant="outlined" disabled={guestSessionPending}>旁观</Button>
+              <Button onClick={() => joinRoom(joinRoomId, false)} variant="contained" disabled={guestSessionPending}>加入游戏</Button>
             </DialogActions>
           </Dialog>
         </Box>
@@ -2450,10 +2450,10 @@ export default function GamePage() {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              馃尭 浜屾鍏冩瓕鐗?
+              🌸 二次元歌牌
             </Typography>
             <Chip
-              label={`鎴块棿: ${roomState.roomId}`}
+              label={`房间: ${roomState.roomId}`}
               onClick={copyRoomId}
               onDelete={copyRoomId}
               deleteIcon={<ContentCopy />}
@@ -2467,7 +2467,7 @@ export default function GamePage() {
                 variant="outlined"
                 size="small"
                 onClick={async () => {
-                  if (confirm('纭畾瑕佺粨鏉熸父鎴忓悧锛熷皢鍥炲埌鎴块棿鍑嗗闃舵銆?)) {
+                  if (confirm('确定要结束游戏吗？将回到房间准备阶段。')) {
                     const updatedRoom = {
                       ...roomState,
                       gamePhase: GamePhase.Lobby,
@@ -2502,7 +2502,7 @@ export default function GamePage() {
                   '&:hover': { borderColor: '#dc2626', bgcolor: 'rgba(239,68,68,0.1)' },
                 }}
               >
-                缁撴潫娓告垙
+                结束游戏
               </Button>
             )}
             <Button
@@ -2516,7 +2516,7 @@ export default function GamePage() {
                 '&:hover': { borderColor: '#ff85ad', bgcolor: 'rgba(255,107,157,0.1)' },
               }}
             >
-              鍥炲埌澶у巺
+              回到大厅
             </Button>
             <IconButton onClick={() => setIsMuted(!isMuted)} sx={{ color: '#fff' }}>
               {isMuted ? <VolumeOff /> : <VolumeUp />}
@@ -2562,32 +2562,32 @@ export default function GamePage() {
           <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }}>
             <Box>
               <Typography sx={{ fontWeight: 700, color: '#fff', mb: 0.5 }}>
-                鎴块棿鐘舵€侊細{getRoomPhaseLabel(roomState.gamePhase)}
+                房间状态：{getRoomPhaseLabel(roomState.gamePhase)}
               </Typography>
               <Stack direction="row" spacing={1} sx={{ mb: 1, flexWrap: 'wrap' }} useFlexGap>
                 <Chip
                   size="small"
                   color={roomSyncStatus === 'live' ? 'success' : roomSyncStatus === 'connecting' ? 'warning' : 'default'}
-                  label={roomSyncStatus === 'live' ? '鎴块棿鍚屾姝ｅ父' : roomSyncStatus === 'connecting' ? '鎴块棿鍚屾杩炴帴涓? : '鏈湴鎴块棿妯″紡'}
+                  label={roomSyncStatus === 'live' ? '房间同步正常' : roomSyncStatus === 'connecting' ? '房间同步连接中' : '本地房间模式'}
                 />
                 <Chip
                   size="small"
                   color={chatSyncStatus === 'live' ? 'success' : chatSyncStatus === 'connecting' ? 'warning' : 'default'}
-                  label={chatSyncStatus === 'live' ? '鑱婂ぉ鍚屾姝ｅ父' : chatSyncStatus === 'connecting' ? '鑱婂ぉ鍚屾杩炴帴涓? : '鑱婂ぉ鏈湴妯″紡'}
+                  label={chatSyncStatus === 'live' ? '聊天同步正常' : chatSyncStatus === 'connecting' ? '聊天同步连接中' : '聊天本地模式'}
                 />
                 <Chip
                   size="small"
                   color={guestSessionReady ? 'success' : 'warning'}
-                  label={guestSessionReady ? '娓稿韬唤宸茶繛鎺ヤ簯绔? : '娓稿韬唤涓存椂妯″紡'}
+                  label={guestSessionReady ? '游客身份已连接云端' : '游客身份临时模式'}
                 />
               </Stack>
               <Typography sx={{ color: 'rgba(255,255,255,0.78)', fontSize: '0.92rem' }}>
-                鐜╁ {activePlayerCount} 浜猴紝宸插噯澶?{readyPlayerCount} 浜猴紝鏃佽 {observerCount} 浜?
+                玩家 {activePlayerCount} 人，已准备 {readyPlayerCount} 人，旁观 {observerCount} 人
               </Typography>
               <Typography sx={{ color: 'rgba(255,255,255,0.62)', fontSize: '0.85rem', mt: 0.5 }}>
                 {isHost
-                  ? '鎶婃埧闂村彿鎴栭個璇锋枃妗堝彂缁欏ソ鍙嬶紝瀵规柟鎵撳紑鍚屼竴涓綉绔欏悗鍗冲彲鍔犲叆銆?
-                  : '濡傛灉浣犳槸鍚庢潵鍔犲叆鐨勭帺瀹讹紝绛夋埧涓荤‘璁ゅぇ瀹堕兘鍑嗗濂藉悗灏卞彲浠ュ紑濮嬨€?}
+                  ? '把房间号、邀请文案或直接链接发给好友；超过 10 分钟未开局的房间会自动清理。'
+                  : '如果你是后来加入的玩家，等房主确认大家都准备好后就可以开始。'}
               </Typography>
             </Box>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', md: 'auto' } }}>
@@ -2597,7 +2597,15 @@ export default function GamePage() {
                 startIcon={<ContentCopy />}
                 sx={{ borderColor: '#c77dff', color: '#fff' }}
               >
-                澶嶅埗鎴块棿鍙?
+                复制房间号
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={copyInviteLink}
+                startIcon={<ContentCopy />}
+                sx={{ borderColor: '#ff6b9d', color: '#fff' }}
+              >
+                复制邀请链接
               </Button>
               <Button
                 variant="contained"
@@ -2607,7 +2615,7 @@ export default function GamePage() {
                   background: 'linear-gradient(135deg, #ff6b9d, #c77dff)',
                 }}
               >
-                澶嶅埗閭€璇锋枃妗?
+                复制邀请文案
               </Button>
             </Stack>
           </Stack>
@@ -2623,7 +2631,7 @@ export default function GamePage() {
               }}
             >
               <Typography variant="h6" sx={{ mb: 2, color: '#ff6b9d', fontWeight: 'bold' }}>
-                鍑嗗鍖?
+                准备区
               </Typography>
               
               <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
@@ -2638,7 +2646,7 @@ export default function GamePage() {
                   sx={{ borderColor: '#c77dff', color: roomState.gameMode === GameMode.AutoRandom ? '#fff' : '#c77dff' }}
                 >
                   <Casino sx={{ mr: 1 }} />
-                  鑷姩闅忔満妯″紡
+                  自动随机模式
                 </Button>
                 <Button
                   variant={roomState.gameMode === GameMode.Judge ? 'contained' : 'outlined'}
@@ -2652,12 +2660,12 @@ export default function GamePage() {
                   disabled={!isHost}
                 >
                   <SportsEsports sx={{ mr: 1 }} />
-                  瑁佸垽妯″紡
+                  裁判模式
                 </Button>
               </Stack>
               
               <Typography sx={{ mb: 2, color: '#ff6b9d', fontWeight: 500 }}>
-                鐜╁ ({roomState.players.length}/8)
+                玩家 ({roomState.players.length}/8)
               </Typography>
               
               <Stack direction="row" spacing={2} flexWrap="wrap" useFlexGap sx={{ mb: 2 }}>
@@ -2684,7 +2692,7 @@ export default function GamePage() {
                           height: 40,
                         }}
                       >
-                        {player.isObserver ? '馃憗' : player.name.charAt(0).toUpperCase()}
+                        {player.isObserver ? '👁' : player.name.charAt(0).toUpperCase()}
                       </Avatar>
                       <Box>
                         <Typography sx={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
@@ -2695,7 +2703,7 @@ export default function GamePage() {
                           {player.isObserver ? (
                             <Chip
                               icon={<Visibility sx={{ fontSize: 14 }} />}
-                              label="鏃佽"
+                              label="旁观"
                               size="small"
                               sx={{ 
                                 height: 20, 
@@ -2707,7 +2715,7 @@ export default function GamePage() {
                           ) : (
                             <Chip
                               icon={player.isReady ? <CheckCircle /> : undefined}
-                              label={player.isReady ? '宸插噯澶? : '鏈噯澶?}
+                              label={player.isReady ? '已准备' : '未准备'}
                               size="small"
                               sx={{ 
                                 height: 20, 
@@ -2719,7 +2727,7 @@ export default function GamePage() {
                           )}
                           {player.isHost && (
                             <Chip
-                              label="鎴夸富"
+                              label="房主"
                               size="small"
                               sx={{ 
                                 height: 20, 
@@ -2748,7 +2756,7 @@ export default function GamePage() {
                     '&:hover': { borderColor: '#22c55e', bgcolor: 'rgba(74, 222, 128, 0.1)' },
                   }}
                 >
-                  馃 娣诲姞娴嬭瘯鏈哄櫒浜?
+                  🤖 添加测试机器人
                 </Button>
               )}
               
@@ -2767,12 +2775,12 @@ export default function GamePage() {
                   }}
                 >
                   {myPlayer?.isReady ? <CheckCircle sx={{ mr: 1 }} /> : <PlayArrow sx={{ mr: 1 }} />}
-                  {myPlayer?.isReady ? '鍙栨秷鍑嗗' : '鍑嗗'}
+                  {myPlayer?.isReady ? '取消准备' : '准备'}
                 </Button>
               )}
               {myPlayer?.isObserver && (
                 <Typography sx={{ color: '#aaa', mb: 2, textAlign: 'center' }}>
-                  馃憗 鏃佽妯″紡 - 鎮ㄥ彧鑳借鐪嬫父鎴?
+                  👁 旁观模式 - 您只能观看游戏
                 </Typography>
               )}
             </Paper>
@@ -2785,7 +2793,7 @@ export default function GamePage() {
               }}
             >
               <Typography variant="h6" sx={{ mb: 2, color: '#ff6b9d', fontWeight: 'bold' }}>
-                馃挰 鑱婂ぉ瀹?
+                💬 聊天室
               </Typography>
               
               <Box
@@ -2801,7 +2809,7 @@ export default function GamePage() {
               >
                 {chatMessages.length === 0 ? (
                   <Typography sx={{ color: '#888', textAlign: 'center', mt: 4 }}>
-                    鏆傛棤娑堟伅锛屽彂閫佺涓€鏉℃秷鎭惂锛?
+                    暂无消息，发送第一条消息吧！
                   </Typography>
                 ) : (
                   chatMessages.map((msg) => (
@@ -2828,7 +2836,7 @@ export default function GamePage() {
                       setChatInput('');
                     }
                   }}
-                  placeholder="杈撳叆娑堟伅..."
+                  placeholder="输入消息..."
                   inputProps={{ 'data-testid': 'chat-input' }}
                   sx={{
                     flex: 1,
@@ -2852,7 +2860,7 @@ export default function GamePage() {
                     background: 'linear-gradient(45deg, #ff6b9d, #c77dff)',
                   }}
                 >
-                  鍙戦€?
+                  发送
                 </Button>
               </Stack>
             </Paper>
@@ -2865,7 +2873,7 @@ export default function GamePage() {
               }}
             >
               <Typography variant="h6" sx={{ mb: 2, color: '#ff6b9d', fontWeight: 'bold' }}>
-                鐐规瓕鏈?- 2026骞存柊鐣墝缁?
+                点歌机 - 2026年新番牌组
               </Typography>
               
               <Box
@@ -2915,7 +2923,7 @@ export default function GamePage() {
                     >
                       {!anime.coverImageMedium && (
                         <Typography sx={{ fontSize: '2.5rem', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-                          馃幀
+                          🎬
                         </Typography>
                       )}
                     </Box>
@@ -2962,7 +2970,7 @@ export default function GamePage() {
                 }}
               >
                 <Typography variant="h6" sx={{ mb: 2, color: '#ff6b9d', fontWeight: 'bold' }}>
-                  鑷畾涔夋瓕鐗屼笂浼?
+                  自定义歌牌上传
                 </Typography>
                 
                 <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
@@ -2973,7 +2981,7 @@ export default function GamePage() {
                     onClick={() => setShowGlobalDecksDialog(true)}
                     sx={{ borderColor: '#c77dff', color: '#c77dff' }}
                   >
-                    鐗岀粍搴?
+                    牌组库
                   </Button>
                   {roomState.customCards.length > 0 && (
                     <Button
@@ -2983,7 +2991,7 @@ export default function GamePage() {
                       onClick={() => setShowSaveDeckDialog(true)}
                       sx={{ borderColor: '#4ade80', color: '#4ade80' }}
                     >
-                      淇濆瓨鐗岀粍
+                      保存牌组
                     </Button>
                   )}
                 </Stack>
@@ -2998,7 +3006,7 @@ export default function GamePage() {
                   }}
                 >
                   <Typography sx={{ fontSize: '0.8rem', color: '#ff6b9d' }}>
-                    馃挕 鎻愮ず锛氭坊鍔犺嚜瀹氫箟姝岀墝鍚庡皢鑷姩浣跨敤鑷畾涔夌墝缁勶紝鏃犳硶涓庣郴缁熺墝缁勬贩鍚堜娇鐢?
+                    💡 提示：添加自定义歌牌后将自动使用自定义牌组，无法与系统牌组混合使用
                   </Typography>
                 </Paper>
                 
@@ -3007,7 +3015,7 @@ export default function GamePage() {
                 {roomState.customCards.length > 0 && (
                   <Box sx={{ mt: 2 }}>
                     <Typography sx={{ mb: 1, color: '#ff6b9d', fontSize: '0.9rem', fontWeight: 500 }}>
-                      宸叉坊鍔犵殑鑷畾涔夊崱鐗?({roomState.customCards.length})
+                      已添加的自定义卡牌 ({roomState.customCards.length})
                     </Typography>
                     <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                       {roomState.customCards.map((card) => (
@@ -3035,7 +3043,7 @@ export default function GamePage() {
                               fontSize: '1rem',
                             }}
                           >
-                            {!card.coverImage && '馃幀'}
+                            {!card.coverImage && '🎬'}
                           </Box>
                           <Box>
                             <Typography sx={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#4a4a6a' }}>
@@ -3074,13 +3082,13 @@ export default function GamePage() {
                   }}
                 >
                   <PlayArrow sx={{ mr: 1 }} />
-                  寮€濮嬫父鎴?
+                  开始游戏
                 </Button>
                 <Button
                   variant="outlined"
                   size="large"
                   onClick={() => {
-                    if (confirm('纭畾瑕佽В鏁ｆ埧闂村悧锛熸墍鏈夌帺瀹跺皢琚涪鍑恒€?)) {
+                    if (confirm('确定要解散房间吗？所有玩家将被踢出。')) {
                       roomSync.deleteRoom(roomState.roomId);
                       setRoomState({
                         roomId: '',
@@ -3118,7 +3126,7 @@ export default function GamePage() {
                     '&:hover': { borderColor: '#dc2626', bgcolor: 'rgba(239,68,68,0.1)' },
                   }}
                 >
-                  瑙ｆ暎鎴块棿
+                  解散房间
                 </Button>
               </Stack>
             )}
@@ -3159,12 +3167,12 @@ export default function GamePage() {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Typography variant="h3" sx={{ fontFamily: '"ZCOOL KuaiLe", cursive', color: '#fff' }}>
-                    鈴革笍 娓告垙宸叉殏鍋?
+                    ⏸️ 游戏已暂停
                   </Typography>
                   <Typography sx={{ mt: 2, color: '#ffc2d1' }}>
                     {isHost && roomState.gameMode === GameMode.Judge 
-                      ? '鐐瑰嚮姝ゅ鎴栬鍒ゆ帶鍒跺彴缁х画娓告垙' 
-                      : '绛夊緟瑁佸垽缁х画娓告垙...'}
+                      ? '点击此处或裁判控制台继续游戏' 
+                      : '等待裁判继续游戏...'}
                   </Typography>
                   {isHost && roomState.gameMode === GameMode.Judge && (
                     <Button
@@ -3175,7 +3183,7 @@ export default function GamePage() {
                       onClick={togglePause}
                       startIcon={<PlayArrow />}
                     >
-                      缁х画娓告垙
+                      继续游戏
                     </Button>
                   )}
                 </Paper>
@@ -3231,7 +3239,7 @@ export default function GamePage() {
                       }}
                     >
                       <Typography sx={{ mb: 1.5, color: '#ffd700', fontWeight: 'bold', textAlign: 'center' }}>
-                        瑁佸垽鎺у埗鍙?
+                        裁判控制台
                       </Typography>
                       <Stack direction="column" spacing={1.5}>
                         <Button 
@@ -3247,7 +3255,7 @@ export default function GamePage() {
                           onClick={togglePause}
                           fullWidth
                         >
-                          {roomState.paused ? '缁х画娓告垙' : '鏆傚仠娓告垙'}
+                          {roomState.paused ? '继续游戏' : '暂停游戏'}
                         </Button>
                         <Button 
                           variant="contained" 
@@ -3261,7 +3269,7 @@ export default function GamePage() {
                           onClick={() => nextTurn()}
                           fullWidth
                         >
-                          涓嬩竴棣?
+                          下一首
                         </Button>
                         <Button 
                           variant="contained" 
@@ -3275,7 +3283,7 @@ export default function GamePage() {
                           onClick={endGame}
                           fullWidth
                         >
-                          缁撴潫娓告垙
+                          结束游戏
                         </Button>
                       </Stack>
                     </Paper>
@@ -3298,7 +3306,7 @@ export default function GamePage() {
                     }}
                   >
                     <Typography sx={{ color: '#fff', fontWeight: 'bold', fontSize: '1rem' }}>
-                      瑁佸垽
+                      裁判
                     </Typography>
                   </IconButton>
                 </Box>
@@ -3342,11 +3350,11 @@ export default function GamePage() {
                       textShadow: '0 0 20px rgba(255, 107, 157, 0.5)',
                     }}
                   >
-                    馃幍 "{roomState.currentQuote}"
+                    🎵 "{roomState.currentQuote}"
                   </Typography>
                   {roomState.gameMode === GameMode.Judge && currentCharacter && (
                     <Typography sx={{ mt: 1, color: '#c77dff', fontStyle: 'italic' }}>
-                      鈥?鏉ヨ嚜銆妠currentCharacter.anime}銆?
+                      — 来自《{currentCharacter.anime}》
                     </Typography>
                   )}
                 </Box>
@@ -3422,7 +3430,7 @@ export default function GamePage() {
                 }}
               >
                 <Typography sx={{ color: '#ffc2d1', fontSize: '0.9rem', mb: 1 }}>
-                  鏈洖鍚堥€夋嫨:
+                  本回合选择:
                 </Typography>
                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                   {roomState.currentTurnPicks.map((pick, idx) => {
@@ -3437,7 +3445,7 @@ export default function GamePage() {
                             {picker?.name.charAt(0).toUpperCase()}
                           </Avatar>
                         }
-                        label={`${picker?.name} 閫変簡 "${pickedCard?.name || '鏈煡'}" ${pick.isCorrect ? '鉁? : '鉁?}`}
+                        label={`${picker?.name} 选了 "${pickedCard?.name || '未知'}" ${pick.isCorrect ? '✓' : '✗'}`}
                         sx={{
                           bgcolor: pick.isCorrect ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 71, 87, 0.2)',
                           color: pick.isCorrect ? '#4ade80' : '#ff4757',
@@ -3472,7 +3480,7 @@ export default function GamePage() {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                馃帀 娓告垙缁撴潫 馃帀
+                🎉 游戏结束 🎉
               </Typography>
               
               {roomState.players
@@ -3491,7 +3499,7 @@ export default function GamePage() {
                   >
                     <Stack direction="row" spacing={2} alignItems="center">
                       <Typography sx={{ fontSize: '2rem' }}>
-                        {index === 0 ? '馃' : index === 1 ? '馃' : index === 2 ? '馃' : `#${index + 1}`}
+                        {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                       </Typography>
                       <Box sx={{ flex: 1 }}>
                         <Typography sx={{ fontWeight: 'bold' }}>
@@ -3500,13 +3508,13 @@ export default function GamePage() {
                         </Typography>
                         <Stack direction="row" spacing={2} sx={{ mt: 0.5 }}>
                           <Typography sx={{ fontSize: '0.8rem', color: '#ffc2d1' }}>
-                            寰楀垎: <span style={{ color: '#ffd700' }}>{player.score}</span>
+                            得分: <span style={{ color: '#ffd700' }}>{player.score}</span>
                           </Typography>
                           <Typography sx={{ fontSize: '0.8rem', color: '#ffc2d1' }}>
-                            鏈€楂樿繛鍑? <span style={{ color: '#c77dff' }}>{player.maxCombo}</span>
+                            最高连击: <span style={{ color: '#c77dff' }}>{player.maxCombo}</span>
                           </Typography>
                           <Typography sx={{ fontSize: '0.8rem', color: '#ffc2d1' }}>
-                            姝ｇ‘鐜? <span style={{ color: '#4ade80' }}>
+                            正确率: <span style={{ color: '#4ade80' }}>
                               {player.correctCount + player.wrongCount > 0
                                 ? Math.round((player.correctCount / (player.correctCount + player.wrongCount)) * 100)
                                 : 0}%
@@ -3562,25 +3570,25 @@ export default function GamePage() {
                   py: 1.5,
                 }}
               >
-                杩斿洖澶у巺
+                返回大厅
               </Button>
             </Paper>
           </Box>
         )}
         
         <Dialog open={showSettingsDialog} onClose={() => setShowSettingsDialog(false)}>
-          <DialogTitle>娓告垙璁剧疆</DialogTitle>
+          <DialogTitle>游戏设置</DialogTitle>
           <DialogContent>
             <Stack spacing={3} sx={{ mt: 1, minWidth: 300 }}>
               <Box>
-                <Typography gutterBottom>闊抽噺</Typography>
+                <Typography gutterBottom>音量</Typography>
                 <Slider
                   value={volume * 100}
                   onChange={(_, v) => setVolume(v as number / 100)}
                 />
               </Box>
               <Box>
-                <Typography gutterBottom>鐗岀粍澶у皬: {roomState.deckRows}琛?脳 {roomState.deckColumns}鍒?/Typography>
+                <Typography gutterBottom>牌组大小: {roomState.deckRows}行 × {roomState.deckColumns}列</Typography>
                 <Stack direction="row" spacing={2}>
                   <Slider
                     value={roomState.deckRows}
@@ -3603,47 +3611,47 @@ export default function GamePage() {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setShowSettingsDialog(false)}>鍏抽棴</Button>
+            <Button onClick={() => setShowSettingsDialog(false)}>关闭</Button>
           </DialogActions>
         </Dialog>
         
         <Dialog open={showSaveDeckDialog} onClose={() => setShowSaveDeckDialog(false)}>
-          <DialogTitle>淇濆瓨鐗岀粍</DialogTitle>
+          <DialogTitle>保存牌组</DialogTitle>
           <DialogContent>
             <Stack spacing={2} sx={{ mt: 1, minWidth: 300 }}>
               <TextField
-                label="鐗岀粍鍚嶇О"
+                label="牌组名称"
                 value={newDeckName}
                 onChange={(e) => setNewDeckName(e.target.value)}
                 fullWidth
-                placeholder="渚嬪锛氭垜鐨勬渶鐖?
+                placeholder="例如：我的最爱"
               />
               <TextField
-                label="鐗岀粍鎻忚堪锛堝彲閫夛級"
+                label="牌组描述（可选）"
                 value={newDeckDescription}
                 onChange={(e) => setNewDeckDescription(e.target.value)}
                 fullWidth
                 multiline
                 rows={2}
-                placeholder="绠€鍗曟弿杩拌繖涓墝缁?.."
+                placeholder="简单描述这个牌组..."
               />
               <Typography sx={{ fontSize: '0.8rem', color: '#888' }}>
-                灏嗕繚瀛?{roomState.customCards.length} 寮犲崱鐗?
+                将保存 {roomState.customCards.length} 张卡牌
               </Typography>
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setShowSaveDeckDialog(false)}>鍙栨秷</Button>
-            <Button onClick={saveCurrentDeck} variant="contained">淇濆瓨</Button>
+            <Button onClick={() => setShowSaveDeckDialog(false)}>取消</Button>
+            <Button onClick={saveCurrentDeck} variant="contained">保存</Button>
           </DialogActions>
         </Dialog>
         
         <Dialog open={showGlobalDecksDialog} onClose={() => setShowGlobalDecksDialog(false)} maxWidth="md" fullWidth>
-          <DialogTitle>鐗岀粍搴?/DialogTitle>
+          <DialogTitle>牌组库</DialogTitle>
           <DialogContent>
             {globalDecks.length === 0 ? (
               <Typography sx={{ py: 4, textAlign: 'center', color: '#888' }}>
-                鏆傛棤淇濆瓨鐨勭墝缁勶紝璇峰厛鍒涘缓骞朵繚瀛樿嚜瀹氫箟鐗岀粍
+                暂无保存的牌组，请先创建并保存自定义牌组
               </Typography>
             ) : (
               <Stack spacing={2} sx={{ mt: 1 }}>
@@ -3669,13 +3677,13 @@ export default function GamePage() {
                         )}
                         <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
                           <Typography sx={{ fontSize: '0.75rem', color: '#666' }}>
-                            {deck.cards.length} 寮犲崱鐗?
+                            {deck.cards.length} 张卡牌
                           </Typography>
                           <Typography sx={{ fontSize: '0.75rem', color: '#666' }}>
-                            鍒涘缓鑰? {deck.createdBy}
+                            创建者: {deck.createdBy}
                           </Typography>
                           <Typography sx={{ fontSize: '0.75rem', color: '#666' }}>
-                            浣跨敤娆℃暟: {deck.playCount}
+                            使用次数: {deck.playCount}
                           </Typography>
                         </Stack>
                       </Box>
@@ -3686,7 +3694,7 @@ export default function GamePage() {
                           onClick={() => loadGlobalDeck(deck)}
                           sx={{ bgcolor: '#c77dff' }}
                         >
-                          浣跨敤
+                          使用
                         </Button>
                         <IconButton
                           size="small"
@@ -3703,7 +3711,7 @@ export default function GamePage() {
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setShowGlobalDecksDialog(false)}>鍏抽棴</Button>
+            <Button onClick={() => setShowGlobalDecksDialog(false)}>关闭</Button>
           </DialogActions>
         </Dialog>
       </Box>

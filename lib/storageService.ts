@@ -1,4 +1,5 @@
 import { supabase, isSupabaseConfigured } from './supabase';
+import { authService } from './authService';
 
 export type StorageBucketName = 'song-audio' | 'cover-images' | 'avatars';
 
@@ -30,6 +31,17 @@ class StorageService {
       throw new Error('Supabase is not configured.');
     }
 
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser) {
+      const guestResult = await authService.ensureGuestSession();
+      if (!guestResult.success) {
+        throw new Error(
+          guestResult.error ||
+            'Upload requires a signed-in or anonymous user. Enable Anonymous Sign-Ins in Supabase Authentication > Providers, or sign in first.'
+        );
+      }
+    }
+
     const path = buildObjectPath(options.fileName, options.folder);
     const { error } = await supabase.storage
       .from(options.bucket)
@@ -39,7 +51,7 @@ class StorageService {
       });
 
     if (error) {
-      throw new Error(error.message);
+      throw new Error(this.getUploadErrorMessage(error.message, options.bucket));
     }
 
     const { data } = supabase.storage
@@ -50,6 +62,23 @@ class StorageService {
       path,
       publicUrl: data.publicUrl,
     };
+  }
+
+  private getUploadErrorMessage(message: string, bucket: StorageBucketName): string {
+    const lowerMessage = message.toLowerCase();
+    if (lowerMessage.includes('row-level security policy')) {
+      return [
+        `Storage bucket "${bucket}" is missing upload permission.`,
+        'Please run the storage.objects policy SQL from supabase/schema.sql.',
+        'Also make sure Anonymous Sign-Ins is enabled in Supabase Authentication > Providers.',
+      ].join(' ');
+    }
+
+    if (lowerMessage.includes('not authenticated') || lowerMessage.includes('jwt')) {
+      return 'Upload requires a signed-in or anonymous user. Enable Anonymous Sign-Ins in Supabase Authentication > Providers, or sign in first.';
+    }
+
+    return message;
   }
 }
 

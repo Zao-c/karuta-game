@@ -215,13 +215,7 @@ BEGIN
   
   DELETE FROM rooms 
   WHERE created_at < NOW() - INTERVAL '10 minutes'
-  AND game_phase = 0
-  AND id IN (
-    SELECT room_id 
-    FROM room_players 
-    GROUP BY room_id 
-    HAVING COUNT(*) = 1
-  );
+  AND game_phase = 0;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -241,6 +235,97 @@ BEGIN
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 END $$;
+
+-- Storage policies for uploaded assets
+DROP POLICY IF EXISTS "Anyone can read song audio" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can upload song audio" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can update song audio" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can delete song audio" ON storage.objects;
+
+DROP POLICY IF EXISTS "Anyone can read cover images" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can upload cover images" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can update cover images" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can delete cover images" ON storage.objects;
+
+DROP POLICY IF EXISTS "Anyone can read avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can upload avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can update avatars" ON storage.objects;
+DROP POLICY IF EXISTS "Authenticated users can delete avatars" ON storage.objects;
+
+CREATE POLICY "Anyone can read song audio"
+ON storage.objects
+FOR SELECT
+TO public
+USING (bucket_id = 'song-audio');
+
+CREATE POLICY "Authenticated users can upload song audio"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'song-audio');
+
+CREATE POLICY "Authenticated users can update song audio"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (bucket_id = 'song-audio')
+WITH CHECK (bucket_id = 'song-audio');
+
+CREATE POLICY "Authenticated users can delete song audio"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (bucket_id = 'song-audio');
+
+CREATE POLICY "Anyone can read cover images"
+ON storage.objects
+FOR SELECT
+TO public
+USING (bucket_id = 'cover-images');
+
+CREATE POLICY "Authenticated users can upload cover images"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'cover-images');
+
+CREATE POLICY "Authenticated users can update cover images"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (bucket_id = 'cover-images')
+WITH CHECK (bucket_id = 'cover-images');
+
+CREATE POLICY "Authenticated users can delete cover images"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (bucket_id = 'cover-images');
+
+CREATE POLICY "Anyone can read avatars"
+ON storage.objects
+FOR SELECT
+TO public
+USING (bucket_id = 'avatars');
+
+CREATE POLICY "Authenticated users can upload avatars"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'avatars');
+
+CREATE POLICY "Authenticated users can update avatars"
+ON storage.objects
+FOR UPDATE
+TO authenticated
+USING (bucket_id = 'avatars')
+WITH CHECK (bucket_id = 'avatars');
+
+CREATE POLICY "Authenticated users can delete avatars"
+ON storage.objects
+FOR DELETE
+TO authenticated
+USING (bucket_id = 'avatars');
 
 -- Create a view for room list with player count
 CREATE OR REPLACE VIEW room_list_view AS

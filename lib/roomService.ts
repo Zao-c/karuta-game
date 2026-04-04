@@ -4,6 +4,8 @@ import { roomSync } from './roomSync';
 import type { Room, RoomPlayer } from './database.types';
 
 const db = supabase as any;
+const LOBBY_ROOM_TTL_MS = 10 * 60 * 1000;
+const ENDED_ROOM_TTL_MS = 5 * 60 * 1000;
 
 export type RoomInfo = {
   id: string;
@@ -75,6 +77,36 @@ export type SupabaseRoomDiagnostic = {
 
 class RoomService {
   private subscriptions: Map<string, any> = new Map();
+
+  private async cleanupSupabaseRooms(): Promise<void> {
+    if (!isSupabaseConfigured()) {
+      return;
+    }
+
+    const now = Date.now();
+    const staleLobbyCutoff = new Date(now - LOBBY_ROOM_TTL_MS).toISOString();
+    const endedRoomCutoff = new Date(now - ENDED_ROOM_TTL_MS).toISOString();
+
+    const { error: endedError } = await db
+      .from('rooms')
+      .delete()
+      .not('game_ended_at', 'is', null)
+      .lt('game_ended_at', endedRoomCutoff);
+
+    if (endedError) {
+      console.error('Error cleaning up ended rooms:', endedError);
+    }
+
+    const { error: staleLobbyError } = await db
+      .from('rooms')
+      .delete()
+      .eq('game_phase', 0)
+      .lt('created_at', staleLobbyCutoff);
+
+    if (staleLobbyError) {
+      console.error('Error cleaning up stale lobby rooms:', staleLobbyError);
+    }
+  }
 
   async diagnoseSupabaseRoomAccess(): Promise<SupabaseRoomDiagnostic> {
     if (!isSupabaseConfigured()) {
@@ -154,6 +186,8 @@ class RoomService {
       }));
     }
 
+    await this.cleanupSupabaseRooms();
+
     const { data, error } = await db
       .from('room_list_view')
       .select('*')
@@ -184,6 +218,8 @@ class RoomService {
       if (!localRoom) return null;
       return this.localRoomToState(localRoom);
     }
+
+    await this.cleanupSupabaseRooms();
 
     const { data: room, error: roomError } = await db
       .from('rooms')
@@ -311,6 +347,8 @@ class RoomService {
       return this.localRoomToState(localRoom);
     }
 
+    await this.cleanupSupabaseRooms();
+
     const user = authService.getCurrentUser();
     const code = this.generateRoomCode();
     
@@ -420,6 +458,8 @@ class RoomService {
       if (!updatedRoom) return null;
       return this.localRoomToState(updatedRoom);
     }
+
+    await this.cleanupSupabaseRooms();
 
     const room = await this.getRoomByCode(code);
     if (!room) return null;
